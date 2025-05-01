@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: cosmos-db-mongodb-vcore-python-quickstart
+metadata:
+  template: cosmos-db-mongodb-vcore-python-quickstart
+services:
+  api:
+    project: ./src/api
+    language: docker
+    host: containerapp
+  web:
+    project: ./src/web
+    language: docker
+    host: containerapp
+pipeline:
+  provider: github
+hooks:
+  postprovision:
+    posix:
+      shell: sh
+      interactive: true
+      continueOnError: false
+      run: |
+        echo "
+        SETTINGS__ENDPOINT=\"$SETTINGS__ENDPOINT\"
+        " > ./src/.env
+    windows:
+      shell: pwsh
+      interactive: true
+      continueOnError: false
+      run: |
+        echo "
+        SETTINGS__ENDPOINT=""$env:SETTINGS__ENDPOINT""
+        " > ./src/.env
